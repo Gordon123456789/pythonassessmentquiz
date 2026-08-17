@@ -313,3 +313,25 @@ def show_results():
     disclaimer.config(
         text="For educational purposes only. Not financial advice."
     )
+
+next_button = tk.Button(
+    root,
+    text="Next",
+    command=next_question,
+
+    font=("Arial", 12)
+)
+
+next_button.pack(pady=20)
+
+next_button.pack_forget()
+
+disclaimer = tk.Label(
+    root,
+    text="",
+    font=("Arial", 9)
+)
+disclaimer.pack()
+
+
+root.mainloop()
