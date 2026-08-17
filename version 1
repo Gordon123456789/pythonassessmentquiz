@@ -1,10 +1,26 @@
 # INVESTMENT QUIZ
 # VERSION 1
 
+# Import tkinter so we can create a GUI
 import tkinter as tk
 
+# Import messagebox so we can show warning messages
 from tkinter import messagebox
 
+
+# QUESTIONS
+
+# This list stores all of the questions in the quiz.
+# Each question is stored as a dictionary.
+#
+# "question" stores the question itself.
+# "options" stores the possible answers.
+# "scores" stores the score for each answer.
+#
+# For example:
+# Option 1 = 1 point
+# Option 2 = 2 points
+# Option 3 = 3 points
 
 questions = [
 
@@ -73,26 +89,58 @@ questions = [
     }
 ]
 
+
+# variables
+
+# This variable stores the user's total score.
+# It starts at 0 because the user has not answered
+# any questions yet.
 score = 0
 
+
+# This keeps track of which question the user is on.
+# Python starts counting from 0.
 current_question = 0
 
+
+# These variables store the user's details.
 user_name = ""
 user_age = 0
 
+
+# CREATE THE MAIN WINDOW
+
+# Create the main Tkinter window.
 root = tk.Tk()
 
+
+# Set the title displayed at the top of the window.
 root.title("Investment Recommendation Quiz")
 
+
+# Set the size of the window.
+# 600 = width
+# 400 = height
 root.geometry("600x400")
 
+
+# TITLE
+
+# Create a label for the title.
 title = tk.Label(
     root,
     text="Investment Recommendation Quiz",
     font=("Arial", 20)
+)
 
+
+# Put the title inside the window.
 title.pack(pady=20)
 
+
+# USER DETAILS
+
+# Create a label asking the user for their name.
 name_label = tk.Label(
     root,
     text="Enter your name:",
@@ -102,8 +150,7 @@ name_label = tk.Label(
 name_label.pack()
 
 
-
-
+# Create a box where the user can enter their name.
 name_entry = tk.Entry(
     root,
     font=("Arial", 12)
@@ -112,6 +159,7 @@ name_entry = tk.Entry(
 name_entry.pack(pady=5)
 
 
+# Create a label asking the user for their age.
 age_label = tk.Label(
     root,
     text="Enter your age:",
@@ -121,7 +169,7 @@ age_label = tk.Label(
 age_label.pack()
 
 
-
+# Create a box where the user can enter their age.
 age_entry = tk.Entry(
     root,
     font=("Arial", 12)
@@ -130,6 +178,9 @@ age_entry = tk.Entry(
 age_entry.pack(pady=5)
 
 
+# QUESTION LABEL
+
+# This label will display the current question.
 question_label = tk.Label(
     root,
     text="",
@@ -137,25 +188,48 @@ question_label = tk.Label(
     wraplength=500
 )
 
+
+# ANSWER VARIABLE
+
+# IntVar is used by Tkinter to store which
+# radio button the user has selected.
+#
+# -1 means that no answer has been selected yet.
 choice = tk.IntVar(value=-1)
 
+
+# RADIO BUTTONS
+
+# This list will store all of the radio buttons.
 buttons = []
 
+
+# Create three radio buttons because each question
+# has three possible answers.
 for i in range(3):
 
+    # Create a radio button.
     button = tk.Radiobutton(
         root,
+
+        # The text will be changed when a question loads.
         text="",
+
+        # Connect the button to the choice variable.
         variable=choice,
+
+        # Each button gets a different value.
         value=i,
+
         font=("Arial", 12)
     )
 
 
+    # Place the button on the screen.
     buttons.append(button)
 
 
-
+# USER DETAILS FUNCTION
 
 def get_user_details():
 
@@ -210,6 +284,10 @@ def get_user_details():
 
     load_question()
 
+
+# START BUTTON
+
+# Create a button that starts the quiz.
 start_button = tk.Button(
     root,
     text="Start Quiz",
@@ -220,15 +298,32 @@ start_button = tk.Button(
 start_button.pack(pady=15)
 
 
+# LOAD QUESTION FUNCTION
 
+# This function displays the current question.
 def load_question():
+
+    # Reset the selected answer.
+    # This means the user must select an answer
+    # for the new question.
     choice.set(-1)
+
+
+    # Get the current question from the questions list.
     question = questions[current_question]
+
+
+    # Change the question label to display
+    # the current question.
     question_label.config(
         text=question["question"]
     )
 
     question_label.pack(pady=20)
+
+
+    # Change each radio button to display
+    # the current question's options.
     for i in range(3):
 
         buttons[i].config(
@@ -239,29 +334,72 @@ def load_question():
             anchor="w",
             padx=150
         )
+
+
+    # Show the Next button.
     next_button.pack(pady=20)
 
 
+# NEXT QUESTION FUNCTION
+
+# This function runs when the user presses Next.
 def next_question():
+
+    # We use global because we are changing
+    # these variables inside the function.
     global score
     global current_question
+
+
+    # Check if the user selected an answer.
+    # -1 means no answer was selected.
     if choice.get() == -1:
+
+        # Display a warning if they haven't
+        # selected an answer.
         messagebox.showwarning(
             "No Answer",
             "Please select an answer."
         )
+
+        # Stop the function here.
         return
 
+
+    # Add the score from the selected answer
+    # to the user's total score.
+    #
+    # choice.get() gives us the selected option.
+    # The scores list tells us how many points
+    # that option is worth.
     score += questions[current_question]["scores"][choice.get()]
+
+
+    # Move to the next question.
     current_question += 1
+
+
+    # Check whether there are still questions left.
     if current_question < len(questions):
+
+        # If there are questions left,
+        # display the next question.
         load_question()
+
     else:
+
+        # If there are no questions left,
+        # display the final result.
         show_results()
 
 
+# RESULTS FUNCTION
 
+# This function decides the user's risk profile.
 def show_results():
+
+    # If the score is 7 or lower,
+    # the user is considered conservative.
     if score <= 7:
 
         result = (
@@ -275,6 +413,9 @@ def show_results():
             "- Bonds"
         )
 
+
+    # If the score is between 8 and 11,
+    # the user is considered moderate.
     elif score <= 11:
 
         result = (
@@ -288,6 +429,9 @@ def show_results():
             "- Bonds"
         )
 
+
+    # If the score is higher than 11,
+    # the user is considered a growth investor.
     else:
 
         result = (
@@ -302,36 +446,69 @@ def show_results():
         )
 
 
+    # Replace the question with the results.
     question_label.config(
         text="Results for " + user_name + "\n\n" + result
     )
 
+
+    # Hide the radio buttons because
+    # the quiz has finished.
     for button in buttons:
         button.pack_forget()
+
+
+    # Hide the Next button.
     next_button.pack_forget()
 
+
+    # Display the disclaimer.
     disclaimer.config(
         text="For educational purposes only. Not financial advice."
     )
 
+
+# NEXT BUTTON
+
+# Create the Next button.
 next_button = tk.Button(
     root,
+
+    # Text displayed on the button.
     text="Next",
+
+    # Run next_question() when clicked.
     command=next_question,
 
     font=("Arial", 12)
 )
 
+
+# Put the button into the window.
 next_button.pack(pady=20)
 
+
+# Hide the Next button until the user
+# has entered their details.
 next_button.pack_forget()
 
+
+# DISCLAIMER
+
+# Create a label for the disclaimer.
 disclaimer = tk.Label(
     root,
     text="",
     font=("Arial", 9)
 )
+
+
+# Put the disclaimer at the bottom.
 disclaimer.pack()
 
 
+# Start the program by asking for
+# the user's details first.
+# The quiz will begin after the user
+# enters valid details.
 root.mainloop()
