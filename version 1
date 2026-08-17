@@ -207,3 +207,14 @@ def get_user_details():
     title.config(
         text="Welcome " + user_name + "!"
     )
+
+    load_question()
+
+start_button = tk.Button(
+    root,
+    text="Start Quiz",
+    command=get_user_details,
+    font=("Arial", 12)
+)
+
+start_button.pack(pady=15)
